@@ -1,0 +1,584 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Special+Gothic+Expanded+One&display=swap');
+
+
+html,
+body,
+#root {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.login {
+    width: 100%;
+    height: 100vh;
+    background: #05fdfd;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+}
+
+.loginLeft::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: url("./assets/45-degree-fabric-light.png") repeat;
+    z-index: 0;
+}
+
+.loginRight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgb(127, 128, 128) url("./assets/asfalt-light.png");
+    z-index: 0;
+}
+
+.loginLeft {
+    height: 100%;
+    width: 55%;
+    background-color: black;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.loginRight {
+    height: 100%;
+    width: 45%;
+    background-color: rgb(138, 137, 137);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.LoginTopStrip{
+    height: 20%;
+    padding: 1%;
+    z-index: 1;
+    display: flex;
+}
+
+.LogoText{
+    font-size: 4rem;
+    display: flex;
+    font-family: "Bebas Neue", sans-serif;
+    margin: 2px 8px;
+    color: aliceblue;
+    margin-top: 0.6rem;
+}
+
+.LogoName h1 {
+    opacity: 0;
+    animation: fadeUp 0.3s ease-out forwards;
+}
+
+.LogoName h1:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.LogoName h1:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.Logo{
+    background-color: rgba(0, 0, 0, 0.605);
+    border: 1px solid #f8f6f6;
+    display: flex;
+    align-items: center;
+    margin: 1%;
+    padding: 16px 28px;
+    left: 2rem;
+    top: 1.5rem;
+    position: relative;
+    border-radius: 0.5em;
+    height: 50%;
+}
+
+.LogoName{
+    font-family: "Bebas Neue", sans-serif;
+    margin-left: 5%;
+    line-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 0.8em;
+    margin-top: 4%;
+    color: #f0e5e5;
+}
+
+.login::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: radial-gradient(
+    circle,
+    transparent 10%,
+    rgba(0, 0, 0, 0.795) 100%
+    );
+
+    pointer-events: none;
+    z-index: 0;
+}
+
+.Moto{
+    height: 30%;
+    padding-left: 6%;
+    font-family: "Special Gothic Expanded One", sans-serif;
+    font-size: 2rem;
+    line-height: 1.3rem;
+    color: #f0e5e5;
+    z-index: 1;
+}
+
+.tagline{
+    height: 5%;
+    padding-left: 6%;
+    padding-right: 25%;
+    z-index: 1;
+    font-size: 1.3rem;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 100;
+    font-style: normal;
+    margin-top: -1rem;
+    color: #f8f6f6;
+    animation: fade 1s ease-out forwards;
+}
+
+.LoginIconsContainer{
+    height: 30%;
+    margin-top: 9%;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+
+    padding: 0 4%;
+    animation: fadeUp 1s ease forwards;
+    cursor: pointer;
+}
+
+.LoginIcons img {
+    width: 28px;
+    height: 28px;
+    color: #f8f6f6;
+    filter: invert(1);
+}
+
+.LoginIcons {
+    display: flex;
+    
+    align-items: center;
+
+    height: 120px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 5%;
+    margin: 6%;
+    text-align: center;
+    justify-content: center;
+    font-family: "Special Gothic Expanded One", sans-serif;
+    font-size: 0.8rem;
+    color: #f8f6f6;
+    transition: 0.5s ease;
+}
+
+.LoginIcons:hover{
+    transform: translateY(-5px);
+    scale: 105%;
+    color: #eeda98;
+}
+
+
+
+
+.LogoText{
+    font-size: clamp(1.5rem, 5vw, 4rem);
+}
+
+.Moto{
+    font-size: clamp(0.8rem, 3vw, 2rem);
+}
+
+.tagline{
+    font-size: clamp(0.6rem, 1.3vw, 1.3rem);
+}
+
+.LoginIcons{
+    font-size: clamp(0.45rem, 1vw, 0.8rem);
+}
+
+.LogoName{
+    font-size: clamp(0.3rem, 1.2vw, 0.8rem);
+}
+
+.LoginContainer{
+    width: 70%;
+    height: 70%;
+
+    background-color: #111111ab;
+    border: 1px solid rgba(255,255,255,0.15);
+
+    padding: 2rem;
+    position: relative;
+    z-index: 0;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+}
+
+.WELCOME {
+    font-family: "Special Gothic Expanded One", sans-serif;
+    color: #f8f6f6;
+    margin-bottom: 2rem;
+}
+
+.WELCOME h1 {
+    margin: 0;
+    font-size: clamp(1.8rem, 3vw, 3rem);
+}
+
+.Email,
+.Password {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+}
+
+.Email h3,
+.Password h3 {
+    margin: 0 0 0.6rem;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.75);
+}
+
+.Email input,
+.Password input {
+    width: 100%;
+    box-sizing: border-box;
+
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.18);
+
+    padding: 14px 18px;
+
+    color: white;
+    font-size: 1rem;
+    font-family: "IBM Plex Mono", monospace;
+
+    outline: none;
+    transition: .2s;
+}
+
+.Email input::placeholder,
+.Password input::placeholder {
+    color: rgba(255,255,255,.35);
+}
+
+.Email input:focus,
+.Password input:focus {
+    border-color: #ffffff;
+}
+
+.Login {
+    width: 100%;
+    margin-top: 2rem;
+
+    padding: 16px;
+
+    border: none;
+    cursor: pointer;
+
+    background: #f2f2f2;
+    color: #111;
+
+    font-family: "Special Gothic Expanded One", sans-serif;
+    font-size: 1rem;
+    letter-spacing: 1px;
+
+    transition: .2s;
+    border: 2px solid black;
+}
+
+.Login:hover {
+    color: white;
+    background: #000000;
+    border: 2px solid rgb(252, 252, 252);
+}
+
+.DontHaveAccount {
+    margin-top: 1.5rem;
+
+    width: 100%;
+
+    border: none;
+    background: transparent;
+
+    color: #f8f6f6;
+    cursor: pointer;
+
+    font-family: "IBM Plex Mono", monospace;
+    font-size: .85rem;
+    text-decoration: underline;
+}
+
+.DontHaveAccount:hover {
+    color: #f6c21b;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        scale: 96%;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        scale: 100%;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.Moto h1 {
+    opacity: 0;
+    animation: fade 0.7s ease-out forwards;
+}
+
+.Moto h1:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.Moto h1:nth-child(2) {
+    animation-delay: 0.45s;
+}
+
+.Moto h1:nth-child(3) {
+    animation-delay: 0.7s;
+}
+
+.LeftPanel{
+    height: 100vh;
+    width: 15%;
+    background-color: #212323;
+}
+.RightPanel{
+    height: 100vh;
+    width: 85%;
+    background-color: #b4b5b5;
+}
+
+.dashboard{
+    display: flex;
+}
+
+.dashboard::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgb(127, 128, 128) url("./assets/asfalt-light.png");
+    z-index: 0;
+    opacity: 90%;
+    mix-blend-mode: overlay;
+    
+}
+.dashboard::after{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            transparent 30%,
+            rgba(0,0,0,.15) 60%,
+            rgba(0,0,0,.55) 100%
+        );
+
+    pointer-events:none;
+}
+
+.PanelLogo{
+    display: flex;
+    flex-direction: column;
+    font-family: "Special Gothic Expanded One", sans-serif;
+    padding: 5%;
+    color: white;
+}
+
+.PanelLogo h1{
+    margin: 2%;
+    margin-bottom: -2%;
+    font-size: 3rem;
+}
+.PanelLogo h3{
+    font-size: 1rem;
+    font-family: "IBM Plex Mono", monospace;
+    margin-left: 1%;
+
+}
+
+.PanelButtonWrapper{
+    margin-top: 5%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.PanelButton{
+    margin: 1%;
+    margin-left: 4%;
+    margin-right: 4%;
+    padding: 3%;
+    font-family: "Bebas Neue", sans-serif;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    transition: 0.5s ease;
+}
+
+.PanelButton:hover{
+    cursor: pointer;
+    background: #414141;
+}
+
+.dashboard::before,
+.dashboard::after{
+    pointer-events:none;
+}
+
+.optionSelected{
+    background-color: #d8d8d8;
+    color: #000000;
+}
+
+.mainDashboard{
+    height: 100vh;
+    width: 100%;
+}
+
+.nav{
+    height: 15vh;
+    padding: 1%;
+    display: flex;
+    align-items: center;
+}
+
+.welcomeMsg{
+    display: flex;
+    flex-direction: column;
+    line-height: 0rem;
+}
+
+.welcomeMsg h1{
+    margin-left: 5%;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 4rem;
+}
+.welcomeMsg h3{
+    margin-left: 5%;
+    font-family: "Special Gothic Expanded One", sans-serif;
+}
+
+.searchBar{
+    margin-left: 15vw;
+    height: 6vh;
+    width: 30vw;
+    background-color: #444343;
+    padding-left: 2%;
+    font-size: 1rem;
+    color: white;
+}
+
+.NotificationButton{
+    margin-left: 2%;
+    width:52px;
+    height:52px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    border: 1px solid rgb(0, 0, 0);
+
+    background:#acacac;
+    border-radius: 15%;
+
+    cursor:pointer;
+    transition:.25s;
+    filter: invert(1);
+}
+
+.NotificationButton:hover{
+    filter: invert(0);
+    background-color: #fcfcfc;
+}
+
+.NotificationButton img{
+    width:24px;
+    height:24px;
+}
+
+.userButton{
+    height: 7vh;
+    border: 1px solid white;
+    color: #ffffff;
+    background-color: #616060;
+    margin-left: 0.7vw;
+    margin-right: 0.7vw;
+    min-width: 15vw;
+    transition: 0.5s ease;
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.userButton:hover{
+    cursor: pointer;
+    background-color: #c2c2c2;
+    border-color: #000000;
+    color: #000000;
+}
+
+.userIcon{
+    min-width: 2.5vw;
+    height: 2.5vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #6f6f6f;
+}
+
+.userName{
+    min-width: 9vw;
+    margin-right: 1vw;
+    
+}
+
+.downArrow{
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    font-family: "Special Gothic Expanded One", sans-serif;
+    color: white;
+    margin-right: 1vw;
+}
