@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import documentRoutes from "./routes/documentRoutes.js";
 
 import authRoutes from "./routes/authRoutes.js";
 
@@ -19,6 +20,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
+
+app.use("/api/documents", documentRoutes);
 
 app.get("/", (req, res) => {
     res.json({

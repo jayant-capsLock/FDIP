@@ -2,11 +2,39 @@ import React, { useState, useEffect, useRef } from "react";
 import ScanIcon from "../assets/scan-circle-outline.svg";
 import AnalyticsIcon from "../assets/analytics-outline.svg";
 import DocumentsIcon from "../assets/document-text-outline.svg";
+import { login as loginUser } from "../api/authApi";
 
-const Login = () => {
+const Login = ({ setLoggedIn, setTransitioning, setShowLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [login, setLogin] = useState("Log-in");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
+
+      const response = await loginUser({
+        email,
+        password,
+      });
+
+      console.log(response.data.token);
+      localStorage.setItem("token", response.data.token);
+
+      setTransitioning(true);
+
+      setLoggedIn(true);
+
+      setTimeout(() => {
+        setShowLogin(false);
+      }, 800);
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -84,11 +112,20 @@ const Login = () => {
             <div className="Password">
               <h3>PASSWORD</h3>
               <input
+                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            {login === "Log-in" && <button className="Login">LOG-IN</button>}
+            {login === "Log-in" && (
+              <button
+                className="Login"
+                onClick={handleLogin}
+                disabled={loading}
+              >
+                {loading ? "LOADING..." : "LOG-IN"}
+              </button>
+            )}
             {login === "Sign-up" && <button className="Login">SIGN-UP</button>}
             <button
               className="DontHaveAccount"
