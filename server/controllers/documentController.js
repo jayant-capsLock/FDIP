@@ -1,6 +1,7 @@
 import pool from "../config/db.js";
 import supabase from "../config/supabase.js";
 import crypto from "crypto";
+import { createJob } from "../services/jobService.js"
 
 export const uploadDocument = async (req, res) => {
   try {
@@ -49,6 +50,10 @@ export const uploadDocument = async (req, res) => {
         req.file.size,
       ],
     );
+
+    const documentId = result.rows[0].id;
+
+    const job = await createJob(documentId);
 
     res.status(201).json({
       success: true,

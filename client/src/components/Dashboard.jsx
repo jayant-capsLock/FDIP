@@ -29,6 +29,9 @@ const Dashboard = ({ setLoggedIn, setShowLogin, setTransitioning }) => {
     } catch (err) {
       console.error(err);
     }
+
+    const countRes = await getDocumentCount();
+    setDocNum(countRes.data.count);
   };
 
   const handleDragOver = (e) => {
