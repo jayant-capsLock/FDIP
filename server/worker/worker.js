@@ -5,6 +5,10 @@ import {
   markFailed,
 } from "../services/jobService.js";
 
+import { downloadDocument } from "../services/storageService.js";
+import { extractText } from "../services/ocrService.js";
+import { saveDocumentText } from "../services/textService.js";
+
 const processNextJob = async () => {
   const job = await getNextPendingJob();
   if (!job) {
@@ -17,11 +21,18 @@ const processNextJob = async () => {
   try {
     await markProcessing(job.id);
 
-    await new Promise((resolve) => {
-      setTimeout(resolve, 3000);
-    });
+    const buffer = await downloadDocument(job.storage_path);
+
+    const extractedText = await extractText(
+      buffer,
+      job.original_filename,
+      job.mime_type,
+    );
+
+    await saveDocumentText(job.document_id, 1, extractedText);
 
     await markCompleted(job.id);
+
     console.log(`Completed Job: ${job.id}`);
   } catch (error) {
     await markFailed(job.id, error.message);

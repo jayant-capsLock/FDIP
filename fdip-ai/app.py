@@ -16,10 +16,10 @@ def root():
 @app.post("/extract")
 def extract(file: UploadFile = File(...)):
     contents = file.file.read()
-    result = extract_text(contents, file.content_type)
+    text = extract_text(contents, file.content_type)
     return {
         "filename": file.filename,
         "content_type": file.content_type,
         "size" : len(contents),
-        "result" : result
+        "text" : text
     }

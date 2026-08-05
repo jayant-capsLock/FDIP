@@ -39,7 +39,4 @@ def extract_text(file_bytes, content_type):
 
     text = "\n".join(page["rec_texts"])
 
-    return {
-        "text": text,
-        "confidence": page["rec_scores"]
-    }
+    return text
