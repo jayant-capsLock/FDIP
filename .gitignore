@@ -1,16 +1,87 @@
+# =========================
 # Dependencies
+# =========================
 node_modules/
 client/node_modules/
 server/node_modules/
 
-# Environment variables
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# =========================
+# Environment Variables
+# =========================
 .env
+.env.*
+!.env.example
+
 client/.env
 server/.env
 
-# Build
+# =========================
+# Build Output
+# =========================
 dist/
 build/
+coverage/
 
+# React / Vite
+client/dist/
+
+# =========================
 # Logs
+# =========================
 *.log
+logs/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Python Cache
+# =========================
+.pytest_cache/
+.mypy_cache/
+
+# =========================
+# Model Downloads
+# =========================
+.paddlex/
+.paddleocr/
+
+# =========================
+# Temporary Uploads
+# =========================
+uploads/
+temp/
+tmp/
+
+# =========================
+# Database
+# =========================
+*.sqlite3
+
+# =========================
+# Misc
+# =========================
+*.pid
+*.seed
+*.out
