@@ -23,13 +23,17 @@ const processNextJob = async () => {
 
     const buffer = await downloadDocument(job.storage_path);
 
-    const extractedText = await extractText(
+    const extractedInfo = await extractText(
       buffer,
       job.original_filename,
       job.mime_type,
     );
 
-    await saveDocumentText(job.document_id, 1, extractedText);
+    const extractedText = extractedInfo.text;
+    const extractedType = extractedInfo.document_type;
+    const extractedConfidence = extractedInfo.confidence;
+
+    await saveDocumentText(job.document_id, 1, extractedText, extractedType, extractedConfidence);
 
     await markCompleted(job.id);
 

@@ -3,12 +3,25 @@ import ScanIcon from "../assets/scan-circle-outline.svg";
 import AnalyticsIcon from "../assets/analytics-outline.svg";
 import DocumentsIcon from "../assets/document-text-outline.svg";
 import { login as loginUser } from "../api/authApi";
+import { register as registerUser } from "../api/authApi";
 
 const Login = ({ setLoggedIn, setTransitioning, setShowLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [login, setLogin] = useState("Log-in");
   const [loading, setLoading] = useState(false);
+
+  const handleSignUp = async () => {
+    try {
+      const result = await registerUser({ name, email,
+        password,
+       });
+      if (result) setLogin("Log-in");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const handleLogin = async () => {
     try {
@@ -105,6 +118,7 @@ const Login = ({ setLoggedIn, setTransitioning, setShowLogin }) => {
             <div className="WELCOME">
               <h1>WELCOME.</h1>
             </div>
+            {login === "Log-in" && (<>
             <div className="Email">
               <h3>EMAIL ADDRESS</h3>
               <input value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -115,8 +129,29 @@ const Login = ({ setLoggedIn, setTransitioning, setShowLogin }) => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-              />
+                />
             </div>
+            </>
+            )}
+            {login === "Sign-up" && (<>
+            <div className="Email">
+              <h3>EMAIL ADDRESS</h3>
+              <input value={email} onChange={(e) => setEmail(e.target.value)} />
+            </div>
+            <div className="Email">
+              <h3>NAME</h3>
+              <input value={name} onChange={(e) => setName(e.target.value)} />
+            </div>
+            <div className="Password">
+              <h3>PASSWORD</h3>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                />
+            </div>
+            </>
+            )}
             {login === "Log-in" && (
               <button
                 className="Login"
@@ -126,7 +161,11 @@ const Login = ({ setLoggedIn, setTransitioning, setShowLogin }) => {
                 {loading ? "LOADING..." : "LOG-IN"}
               </button>
             )}
-            {login === "Sign-up" && <button className="Login">SIGN-UP</button>}
+            {login === "Sign-up" && (
+              <button className="Login" onClick={handleSignUp}>
+                SIGN-UP
+              </button>
+            )}
             <button
               className="DontHaveAccount"
               onClick={() =>

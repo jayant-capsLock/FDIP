@@ -85,3 +85,32 @@ tmp/
 *.pid
 *.seed
 *.out
+
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.py[cod]
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# ML datasets
+fdip-ml/datasets/raw/
+fdip-ml/datasets/processed/
+
+# ML cache / generated files
+fdip-ml/.cache/
+
+# Python / tooling
+.pytest_cache/
+.mypy_cache/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

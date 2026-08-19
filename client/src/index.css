@@ -730,6 +730,7 @@ body,
     justify-content: center;
     align-items: center;
     font-family: "Special Gothic Expanded One", sans-serif;
+    filter: saturate(0);
     
 }
 

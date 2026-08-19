@@ -21,5 +21,5 @@ export const extractText = async (
     }
   );
 
-  return data.text;
+  return data;
 };
