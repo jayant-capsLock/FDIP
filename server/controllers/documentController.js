@@ -6,35 +6,38 @@ import { createJob } from "../services/jobService.js";
 export const getDocuments = async (req, res) => {
   try {
       const result = await pool.query(
-      `
-      SELECT
-        d.id,
-        d.filename,
-        d.original_filename,
-        d.storage_path,
-        d.mime_type,
-        d.file_size,
-        d.document_type,
+        `
+        SELECT
+          d.id,
+          d.filename,
+          d.original_filename,
+          d.storage_path,
+          d.mime_type,
+          d.file_size,
+          dt.document_type,
 
-        LOWER(
-          COALESCE(pj.status::text, d.status)
-        ) AS status,
+          LOWER(
+            COALESCE(pj.status::text, d.status)
+          ) AS status,
 
-        d.uploaded_at,
-        d.processed_at,
-        d.metadata
+          d.uploaded_at,
+          d.processed_at,
+          d.metadata
 
-      FROM public.documents d
+        FROM public.documents d
 
-      LEFT JOIN public.processing_jobs pj
-        ON pj.document_id = d.id
+        LEFT JOIN public.document_text dt
+          ON dt.document_id = d.id
 
-      WHERE d.user_id = $1
+        LEFT JOIN public.processing_jobs pj
+          ON pj.document_id = d.id
 
-      ORDER BY d.uploaded_at DESC
-      `,
-      [req.user.id],
-    );
+        WHERE d.user_id = $1
+
+        ORDER BY d.uploaded_at DESC
+        `,
+        [req.user.id],
+      );
 
     const documents = [];
 

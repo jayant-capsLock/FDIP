@@ -191,6 +191,7 @@ body,
     transform: translateY(-5px);
     scale: 105%;
     color: #eeda98;
+    cursor: pointer;
 }
 
 
@@ -309,6 +310,7 @@ body,
     color: white;
     background: #000000;
     border: 2px solid rgb(252, 252, 252);
+    cursor: pointer;
 }
 
 .DontHaveAccount {
@@ -329,6 +331,7 @@ body,
 
 .DontHaveAccount:hover {
     color: #f6c21b;
+    cursor: pointer;
 }
 
 @keyframes fadeUp {
@@ -459,6 +462,7 @@ body,
 .PanelButton:hover{
     
     background: #414141;
+    cursor: pointer;
 }
 
 .dashboard::before,
@@ -532,6 +536,7 @@ body,
 .NotificationButton:hover{
     filter: invert(0);
     background-color: #fcfcfc;
+    cursor: pointer;
 }
 
 .NotificationButton img{
@@ -558,6 +563,7 @@ body,
     background-color: #c2c2c2;
     border-color: #000000;
     color: #000000;
+    cursor: pointer;
 }
 
 .userIcon{
@@ -656,7 +662,7 @@ body,
 .userButtonDropDown button:hover{
     background-color: #a5a5a5;
     border-color: #000000;
-    
+    cursor: pointer;
     color: #000000;
 }
 
@@ -724,7 +730,7 @@ body,
 }
 
 .uploadDoc:hover{
-    
+    cursor: pointer;
     background-color: rgba(255, 255, 255, 0.35);
     color: #545555;
 }
@@ -769,7 +775,7 @@ body,
 }
 
 .charts > * :hover{
-    
+    cursor: pointer;
 }
 
 .documentsPanel{
@@ -833,6 +839,7 @@ body,
 .documentCard:hover {
   transform: translate(-4px, -4px);
   box-shadow: 12px 12px 0 #000;
+  cursor: pointer;
 }
 
 
@@ -876,6 +883,7 @@ body,
 
 .documentCard:hover .docImgContainer img {
   transform: scale(1.04);
+  cursor: pointer;
 }
 
 
@@ -1000,6 +1008,7 @@ body,
 .closeDocument:hover {
     background: #f5f1e8;
     color: black;
+    cursor: pointer;
 }
 
 
@@ -1086,113 +1095,13 @@ body,
 .downloadDocument:hover {
     background: #f5f1e8;
     color: black;
-
+    cursor: pointer;
     transform: translate(-3px, -3px);
 
     box-shadow: 6px 6px 0 black;
 }
 
-/* =========================================
-   FDIP CUSTOM CURSOR
-========================================= */
 
-* {
-    cursor: none !important;
-}
-
-.customCursor {
-    position: fixed;
-
-    width: 30px;
-    height: 40px;
-
-    pointer-events: none;
-
-    z-index: 999999;
-
-    transform:
-        translate(-10px, -10px)
-        scale(0.72);
-
-    transform-origin: top left;
-
-    will-change: transform, left, top;
-
-    transition:
-        transform 0.25s cubic-bezier(.16, 1, .3, 1);
-}
-
-
-/* =========================================
-   SVG
-========================================= */
-
-.customCursor svg {
-    width: 100%;
-    height: 100%;
-
-    display: block;
-
-    overflow: visible;
-}
-
-
-/* =========================================
-   DARK OUTER EDGE
-========================================= */
-
-.cursorOutline {
-    fill: #171717;
-}
-
-
-/* =========================================
-   MAIN FACE
-========================================= */
-
-.cursorFace {
-    fill: #d0d0d0;
-}
-
-
-/* =========================================
-   GLASS / PLASTIC HIGHLIGHT
-========================================= */
-
-.cursorHighlight {
-    fill: rgba(255, 255, 255, 0.28);
-
-    opacity: 0;
-
-    transition:
-        opacity 0.25s ease;
-}
-
-
-/* =========================================
-   HOVER
-========================================= */
-
-.customCursor.hover {
-    transform:
-        translate(-10px, -10px)
-        scale(1);
-}
-
-.customCursor.hover .cursorHighlight {
-    opacity: 1;
-}
-
-
-/* =========================================
-   CLICK
-========================================= */
-
-.customCursor.click {
-    transform:
-        translate(-10px, -10px)
-        scale(0.88);
-}
 
 /* =================================
    PROCESSING STATUS
@@ -1222,13 +1131,10 @@ body,
 }
 
 
-/* =================================
-   DONUT
-================================= */
 
 .processingChartVisual {
     width: 52%;
-    height: 100%;
+    height: 90%;
 
     min-width: 0;
 }

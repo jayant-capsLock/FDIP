@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Login from "./components/Login.jsx";
 import Dashboard from "./components/Dashboard.jsx";
-import CustomCursor from "./components/CustomCursor";
+
 
 const App = () => {
   const [email, setEmail] = useState("");
@@ -20,7 +20,6 @@ const App = () => {
 
   return (
     <div className="appContainer">
-      <CustomCursor />
       {showLogin && (
         <div className={`loginWrapper ${transitioning ? "slideUp" : ""}`}>
           <Login

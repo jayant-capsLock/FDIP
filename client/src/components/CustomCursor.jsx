@@ -17,7 +17,7 @@ const CustomCursor = () => {
       });
 
       const target = e.target.closest(
-        "button, a, .documentCard, [data-cursor]"
+        "button, a, .documentCard, [data-cursor]",
       );
 
       setHover(!!target);
@@ -39,18 +39,13 @@ const CustomCursor = () => {
 
   return (
     <div
-      className={`customCursor ${hover ? "hover" : ""} ${
-        click ? "click" : ""
-      }`}
+      className={`customCursor ${hover ? "hover" : ""} ${click ? "click" : ""}`}
       style={{
-        left: position.x,
-        top: position.y,
+        left: position.x - 29,
+        top: position.y - 19,
       }}
     >
-      <svg
-        viewBox="0 0 250 301"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg viewBox="0 0 250 301" xmlns="http://www.w3.org/2000/svg">
         {/* DARK OUTER EDGE */}
 
         <path
