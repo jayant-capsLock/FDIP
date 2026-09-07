@@ -32,8 +32,9 @@ const processNextJob = async () => {
     const extractedText = extractedInfo.text;
     const extractedType = extractedInfo.document_type;
     const extractedConfidence = extractedInfo.confidence;
+    const extractedMetadata = extractedInfo.metadata;
 
-    await saveDocumentText(job.document_id, 1, extractedText, extractedType, extractedConfidence);
+    await saveDocumentText(job.document_id, 1, extractedText, extractedType, extractedConfidence, extractedMetadata);
 
     await markCompleted(job.id);
 
@@ -47,4 +48,14 @@ const processNextJob = async () => {
 
 console.log("Worker started...");
 
-setInterval(processNextJob, 5000);
+const workerLoop = async () => {
+  while (true) {
+    await processNextJob();
+
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+  }
+};
+
+console.log("Worker started...");
+
+workerLoop();

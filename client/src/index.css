@@ -159,7 +159,7 @@ body,
 
     padding: 0 4%;
     animation: fadeUp 1s ease forwards;
-    cursor: pointer;
+    
 }
 
 .LoginIcons img {
@@ -292,7 +292,7 @@ body,
     padding: 16px;
 
     border: none;
-    cursor: pointer;
+    
 
     background: #f2f2f2;
     color: #111;
@@ -320,7 +320,7 @@ body,
     background: transparent;
 
     color: #f8f6f6;
-    cursor: pointer;
+    
 
     font-family: "IBM Plex Mono", monospace;
     font-size: .85rem;
@@ -457,7 +457,7 @@ body,
 }
 
 .PanelButton:hover{
-    cursor: pointer;
+    
     background: #414141;
 }
 
@@ -554,7 +554,7 @@ body,
 }
 
 .userButton:hover{
-    cursor: pointer;
+    
     background-color: #c2c2c2;
     border-color: #000000;
     color: #000000;
@@ -656,7 +656,7 @@ body,
 .userButtonDropDown button:hover{
     background-color: #a5a5a5;
     border-color: #000000;
-    cursor: pointer;
+    
     color: #000000;
 }
 
@@ -674,25 +674,31 @@ body,
     }
 }
 
-.insights{
+.insights {
     display: flex;
-    padding-left: 2%;
-    padding-top: 1%;
+    gap: 1.2vw;
+    padding: 1% 2%;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
-.bigInsight{
-    min-height: 20vh;
+.bigInsight {
+    height: 25vh;
     width: 17vw;
+    min-width: 0;
+    margin-right: 0;
     background-color: #4b4b4b;
-    margin-right: 1.8vw;
     border-radius: 0.5vw;
+    overflow: hidden;
 }
 
-.smallInsight{
-    min-height: 20vh;
+.smallInsight {
+    height: 25vh;
     width: 11vw;
+    min-width: 0;
+    margin-right: 0;
     background-color: #545555;
-    margin-right: 1.8vw;
     border-radius: 0.5vw;
 }
 
@@ -718,14 +724,15 @@ body,
 }
 
 .uploadDoc:hover{
-    cursor: pointer;
+    
     background-color: rgba(255, 255, 255, 0.35);
     color: #545555;
 }
 
 .insightTitle{
     color: white;
-    height: 50%;
+    margin-bottom: -5%;
+    height: 30%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -743,4 +750,560 @@ body,
     color: white;
     font-size: 1.5rem;
     transition: 0.5s ease;
+    margin-top: 10%;
+}
+
+.charts {
+    width: 100%;
+    height: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    
+}
+
+.charts > * {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.charts > * :hover{
+    
+}
+
+.documentsPanel{
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.slidingWindow{
+    width: 70%;
+    height: 100%;
+    background-color: #05fdfd;
+    position: absolute;
+    right: -100%;
+}
+
+/* =========================
+   DOCUMENTS PANEL
+========================= */
+
+.documentsPanel {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+
+    padding: 35px;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 28px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    align-content: start;
+}
+
+
+/* =========================
+   DOCUMENT CARD
+========================= */
+
+.documentCard {
+  background: #f5f1e8;
+  border: 4px solid #000;
+  box-shadow: 8px 8px 0 #000;
+  min-height: 300px;
+  
+
+  display: flex;
+  flex-direction: column;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+/* Hover = slight brutalist movement */
+
+.documentCard:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 12px 12px 0 #000;
+}
+
+
+/* Click */
+
+.documentCard:active {
+  transform: translate(4px, 4px);
+  box-shadow: 4px 4px 0 #000;
+}
+
+
+/* =========================
+   IMAGE AREA
+========================= */
+
+.docImgContainer {
+  width: 100%;
+  height: 210px;
+
+  background: #d9d9d9;
+  border-bottom: 4px solid #000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+
+/* Actual document thumbnail */
+
+.docImgContainer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+
+  transition: transform 0.2s ease;
+}
+
+.documentCard:hover .docImgContainer img {
+  transform: scale(1.04);
+}
+
+
+/* =========================
+   DOCUMENT INFORMATION
+========================= */
+
+.docPreview {
+  padding: 14px 16px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+
+/* Filename */
+
+.docPreview h2 {
+  margin: 0;
+
+  font-size: 17px;
+  font-weight: 900;
+  text-transform: uppercase;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* Document type */
+
+.docPreview p {
+  margin: 0;
+
+  display: inline-block;
+  width: fit-content;
+
+  padding: 5px 9px;
+
+  background: #000;
+  color: #fff;
+
+  border: 2px solid #000;
+
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.documentOverlay {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.65);
+
+    z-index: 20;
+}
+
+
+.documentWindow {
+    position: fixed;
+
+    top: 0;
+    right: 0;
+
+    width: 65%;
+    height: 100vh;
+
+    box-sizing: border-box;
+
+    background: #f5f1e8;
+
+    border-right: 5px solid black;
+
+    box-shadow: 12px 0 0 black;
+
+    z-index: 21;
+
+    padding: 35px;
+
+    overflow-y: auto;
+
+    animation: documentSlideIn 0.3s ease-out;
+}
+
+
+@keyframes documentSlideIn {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+
+.closeDocument {
+    position: absolute;
+
+    top: 20px;
+    right: 25px;
+
+    width: 50px;
+    height: 50px;
+
+    background: #000;
+    color: white;
+
+    border: 3px solid black;
+
+    font-size: 32px;
+    font-weight: bold;
+
+    
+}
+
+
+.closeDocument:hover {
+    background: #f5f1e8;
+    color: black;
+}
+
+
+.documentWindow h1 {
+    margin: 0 70px 25px 0;
+
+    font-family: "Special Gothic Expanded One", sans-serif;
+    font-size: 2rem;
+
+    text-transform: uppercase;
+}
+
+
+.largePreview {
+    width: 100%;
+    height: 55vh;
+
+    background: #d0d0d0;
+
+    border: 4px solid black;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+}
+
+
+.largePreview img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+
+.largePreview iframe {
+    width: 100%;
+    height: 100%;
+
+    border: none;
+}
+
+
+.documentInfo {
+    margin-top: 20px;
+
+    padding: 15px;
+
+    border: 4px solid black;
+
+    background: white;
+
+    font-family: "IBM Plex Mono", monospace;
+}
+
+
+.documentInfo p {
+    margin: 8px 0;
+}
+
+
+.downloadDocument {
+    display: inline-block;
+
+    margin-top: 20px;
+
+    padding: 15px 25px;
+
+    background: black;
+    color: white;
+
+    border: 3px solid black;
+
+    text-decoration: none;
+
+    font-family: "Special Gothic Expanded One", sans-serif;
+
+    transition: 0.15s;
+}
+
+
+.downloadDocument:hover {
+    background: #f5f1e8;
+    color: black;
+
+    transform: translate(-3px, -3px);
+
+    box-shadow: 6px 6px 0 black;
+}
+
+/* =========================================
+   FDIP CUSTOM CURSOR
+========================================= */
+
+* {
+    cursor: none !important;
+}
+
+.customCursor {
+    position: fixed;
+
+    width: 30px;
+    height: 40px;
+
+    pointer-events: none;
+
+    z-index: 999999;
+
+    transform:
+        translate(-10px, -10px)
+        scale(0.72);
+
+    transform-origin: top left;
+
+    will-change: transform, left, top;
+
+    transition:
+        transform 0.25s cubic-bezier(.16, 1, .3, 1);
+}
+
+
+/* =========================================
+   SVG
+========================================= */
+
+.customCursor svg {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    overflow: visible;
+}
+
+
+/* =========================================
+   DARK OUTER EDGE
+========================================= */
+
+.cursorOutline {
+    fill: #171717;
+}
+
+
+/* =========================================
+   MAIN FACE
+========================================= */
+
+.cursorFace {
+    fill: #d0d0d0;
+}
+
+
+/* =========================================
+   GLASS / PLASTIC HIGHLIGHT
+========================================= */
+
+.cursorHighlight {
+    fill: rgba(255, 255, 255, 0.28);
+
+    opacity: 0;
+
+    transition:
+        opacity 0.25s ease;
+}
+
+
+/* =========================================
+   HOVER
+========================================= */
+
+.customCursor.hover {
+    transform:
+        translate(-10px, -10px)
+        scale(1);
+}
+
+.customCursor.hover .cursorHighlight {
+    opacity: 1;
+}
+
+
+/* =========================================
+   CLICK
+========================================= */
+
+.customCursor.click {
+    transform:
+        translate(-10px, -10px)
+        scale(0.88);
+}
+
+/* =================================
+   PROCESSING STATUS
+================================= */
+
+.processingInsight {
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+
+/* =================================
+   CHART
+================================= */
+
+.processingChart {
+    width: 100%;
+    height: calc(100% - 45px);
+
+    margin-top: 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    box-sizing: border-box;
+}
+
+
+/* =================================
+   DONUT
+================================= */
+
+.processingChartVisual {
+    width: 52%;
+    height: 100%;
+
+    min-width: 0;
+}
+
+
+/* =================================
+   LEGEND
+================================= */
+
+.processingLegend {
+    width: 48%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    padding-right: 5px;
+
+    box-sizing: border-box;
+}
+
+
+/* =================================
+   LEGEND ITEM
+================================= */
+
+.processingLegendItem {
+    display: grid;
+
+    grid-template-columns: 10px 1fr auto;
+
+    align-items: center;
+
+    gap: 6px;
+
+    font-family: "IBM Plex Mono", monospace;
+
+    font-size: 9px;
+    font-weight: 900;
+    color: white;
+}
+
+
+/* =================================
+   LEGEND BOX
+================================= */
+
+.processingLegendBox {
+    width: 9px;
+    height: 9px;
+
+    border: 1px solid #000;
+
+    box-sizing: border-box;
+}
+
+
+/* =================================
+   LEGEND NAME
+================================= */
+
+.processingLegendName {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* =================================
+   NUMBER
+================================= */
+
+.processingLegendItem strong {
+    font-size: 11px;
+    margin-right: 1vw;
+    color: white;
 }

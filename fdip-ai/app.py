@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File
 from services.ocr_service import extract_text
 from services.classifier_service import predict_document
+from services.metadata_service import extract_metadata
 
 app = FastAPI(
     title="FDIP AI Service",
@@ -20,6 +21,9 @@ def extract(file: UploadFile = File(...)):
     text = extract_text(contents, file.content_type)
     classification = predict_document(text)
 
+    #metadata extraction function here that takes text and classification:
+    metadata = extract_metadata(text, classification["document_type"])
+
     return {
         "filename": file.filename,
         "content_type": file.content_type,
@@ -27,4 +31,5 @@ def extract(file: UploadFile = File(...)):
         "text" : text,
         "document_type" : classification["document_type"],
         "confidence" : classification["confidence"],
+        "metadata" : metadata,
     }

@@ -8,11 +8,11 @@ import fitz
 ocr = PaddleOCR(
     device="cpu",
 
-    # Use lightweight PP-OCRv5 models
+    # use lightweight PP-OCRv5 models
     text_detection_model_name="PP-OCRv5_mobile_det",
     text_recognition_model_name="PP-OCRv5_mobile_rec",
 
-    # Skip expensive preprocessing
+    #skip expensive preprocessing
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_textline_orientation=False,

@@ -14,13 +14,28 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
-export const uploadDocument = (file) => {
+export const uploadDocument = (files) => {
   const formData = new FormData();
-  formData.append("document", file);
 
-  return API.post("/upload", formData);
+  files.forEach((file) => {
+    formData.append("document", file);
+  });
+
+  return API.post("/upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 export const getDocumentCount = () => {
   return API.get("/count");
+};
+
+export const getDocumentCountWithType = () => {
+  return API.get("/countType");
+};
+
+export const getDocuments = () => {
+  return API.get("/");
 };
