@@ -95,6 +95,34 @@ const Dashboard = ({ setLoggedIn, setShowLogin, setTransitioning }) => {
     fetchDocumentCount();
   }, []);
 
+  const renderValue = (value) => {
+    if (value === null || value === undefined) return "-";
+
+    if (Array.isArray(value)) {
+      return (
+        <ul>
+          {value.map((item, i) => (
+            <li key={i}>{renderValue(item)}</li>
+          ))}
+        </ul>
+      );
+    }
+
+    if (typeof value === "object") {
+      return (
+        <ul>
+          {Object.entries(value).map(([k, v]) => (
+            <li key={k}>
+              <strong>{k.replaceAll("_", " ")}:</strong> {renderValue(v)}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    return String(value);
+  };
+
   const statusCounts = {
     processing: documents.filter((document) => document.status === "processing")
       .length,
@@ -212,12 +240,12 @@ const Dashboard = ({ setLoggedIn, setShowLogin, setTransitioning }) => {
                   {selectedDocument.metadata &&
                     Object.entries(selectedDocument.metadata).map(
                       ([key, value]) => (
-                        <p key={key}>
+                        <div key={key}>
                           <strong>
                             {key.replaceAll("_", " ").toUpperCase()}:
                           </strong>{" "}
-                          {value}
-                        </p>
+                          {renderValue(value)}
+                        </div>
                       ),
                     )}
                 </div>
