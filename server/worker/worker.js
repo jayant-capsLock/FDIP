@@ -8,6 +8,8 @@ import {
 import { downloadDocument } from "../services/storageService.js";
 import { extractText } from "../services/ocrService.js";
 import { saveDocumentText } from "../services/textService.js";
+import { chunkDocument } from "../services/chunkingService.js";
+import embeddingService from "../services/embeddingService.js";
 
 const processNextJob = async () => {
   const job = await getNextPendingJob();
@@ -33,8 +35,24 @@ const processNextJob = async () => {
     const extractedType = extractedInfo.document_type;
     const extractedConfidence = extractedInfo.confidence;
     const extractedMetadata = extractedInfo.metadata;
+    const chunks = chunkDocument(extractedText);
 
-    await saveDocumentText(job.document_id, 1, extractedText, extractedType, extractedConfidence, extractedMetadata);
+    const embeddings = await embeddingService.generateEmbeddings(
+      chunks.map((chunk) => chunk.chunk_text),
+    );
+
+    console.log(`Generated ${embeddings.length} embeddings.`);
+
+    await saveDocumentText(
+      job.document_id,
+      1,
+      extractedText,
+      extractedType,
+      extractedConfidence,
+      extractedMetadata,
+      chunks,
+      embeddings,
+    );
 
     await markCompleted(job.id);
 

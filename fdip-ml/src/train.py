@@ -6,7 +6,18 @@ from sklearn.linear_model import LogisticRegression
 
 
 
-df = pd.read_csv("datasets/processed/classifier_dataset.csv")
+from pathlib import Path
+
+# project root directory (fdip-ml)
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# dataset location
+DATASET_PATH = BASE_DIR / "datasets" / "processed" / "classifier_dataset.csv"
+
+df = pd.read_csv(DATASET_PATH)
+
+print("Dataset loaded successfully!")
+print("Dataset shape:", df.shape)
 
 
 
@@ -69,7 +80,12 @@ print(confusion_matrix(y_test, predictions))
 
 import joblib
 
-joblib.dump(model, "models/classifier.joblib")
-joblib.dump(vectorizer, "models/tfidf_vectorizer.joblib")
+MODEL_DIR = BASE_DIR / "models"
+MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
+
+
+joblib.dump(model, MODEL_DIR / "classifier.joblib")
+joblib.dump(vectorizer, MODEL_DIR / "tfidf_vectorizer.joblib")
 
 print("Model saved!")

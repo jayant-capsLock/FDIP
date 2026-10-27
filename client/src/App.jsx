@@ -5,9 +5,9 @@ import Dashboard from "./components/Dashboard.jsx";
 
 const App = () => {
   const [email, setEmail] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false); // User authenticated
-  const [transitioning, setTransitioning] = useState(false); // Animation running
-  const [showLogin, setShowLogin] = useState(true); // Is login still rendered
+  const [loggedIn, setLoggedIn] = useState(false); 
+  const [transitioning, setTransitioning] = useState(false);
+  const [showLogin, setShowLogin] = useState(true); 
 
   useEffect(() => {
     const token = localStorage.getItem("token");
