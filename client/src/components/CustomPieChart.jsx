@@ -8,10 +8,56 @@ import { Pie, PieChart, Sector, Tooltip } from "recharts";
 
 const documentColors = {
   bank_statement: "#00F5FF", // electric cyan
-  invoice: "#F5F5F5",        // off-white
-  payslip: "#8A8A8A",        // concrete gray
-  tax_document: "#C4C4C4",   // light concrete
-  receipt: "#242424",        // black/charcoal
+  invoice: "#F5F5F5", // off-white
+  payslip: "#8A8A8A", // concrete gray
+  tax_document: "#C4C4C4", // light concrete
+  receipt: "#242424", // black/charcoal
+
+  // invoices & notes (warm yellows / oranges)
+  sales_invoice: "#FFD60A",
+  purchase_invoice: "#FFB000",
+  proforma_invoice: "#FFE97A",
+  credit_note: "#FF8A00",
+  debit_note: "#FF5A1F",
+
+  // orders & logistics (reds / pinks)
+  purchase_order: "#FF3B30",
+  delivery_challan: "#FF6B81",
+  eway_bill: "#D81B60",
+
+  // payments & statements (cyan / blue family)
+  payment_advice: "#00B8D9",
+  settlement_report: "#4DA3FF",
+  customer_statement: "#2979FF",
+  vendor_statement: "#1E40AF",
+  cash_book: "#7FE7F0",
+
+  // banking & investments (purples)
+  loan_statement: "#B388FF",
+  credit_card_statement: "#8E5CF7",
+  demat_statement: "#6A3FD4",
+  mutual_fund_statement: "#D1A8FF",
+  insurance_policy: "#C026D3",
+
+  // payroll & HR (greens)
+  payroll_register: "#39FF14",
+  reimbursement_claim: "#00C853",
+  expense_report: "#76FF03",
+
+  // utilities & rent (teals / lime)
+  utility_bill: "#1DE9B6",
+  rent_receipt: "#A3E635",
+
+  // tax & statutory (magentas / browns)
+  form16: "#FF2E93",
+  tds_certificate: "#E040FB",
+  form26as: "#F06292",
+  ais_tis: "#BA68C8",
+  itr: "#FF80AB",
+  gstr1: "#C98B4B",
+  gstr2b: "#A16207",
+  gstr3b: "#D97706",
+  gst_payment_challan: "#8B5E34",
 };
 
 // --------------------------------------------------
@@ -24,10 +70,7 @@ const formatDocumentType = (name) => {
 
   return name
     .split("_")
-    .map(
-      (word) =>
-        word.charAt(0).toUpperCase() + word.slice(1)
-    )
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 };
 
@@ -53,33 +96,24 @@ const renderActiveShape = ({
   const cos = Math.cos(-RADIAN * (midAngle ?? 1));
 
   // Short connector
-  const sx =
-    (cx ?? 0) + ((outerRadius ?? 0) + 3) * cos;
+  const sx = (cx ?? 0) + ((outerRadius ?? 0) + 3) * cos;
 
-  const sy =
-    (cy ?? 0) + ((outerRadius ?? 0) + 3) * sin;
+  const sy = (cy ?? 0) + ((outerRadius ?? 0) + 3) * sin;
 
-  const mx =
-    (cx ?? 0) + ((outerRadius ?? 0) + 13) * cos;
+  const mx = (cx ?? 0) + ((outerRadius ?? 0) + 13) * cos;
 
-  const my =
-    (cy ?? 0) + ((outerRadius ?? 0) + 13) * sin;
+  const my = (cy ?? 0) + ((outerRadius ?? 0) + 13) * sin;
 
   // Short horizontal section
-  const ex =
-    mx + (cos >= 0 ? 1 : -1) * 18;
+  const ex = mx + (cos >= 0 ? 1 : -1) * 18;
 
   const ey = my;
 
-  const textAnchor =
-    cos >= 0 ? "start" : "end";
+  const textAnchor = cos >= 0 ? "start" : "end";
 
-  const documentName = formatDocumentType(
-    payload?.name
-  );
+  const documentName = formatDocumentType(payload?.name);
 
-  const percentage =
-    ((percent ?? 0) * 100).toFixed(1);
+  const percentage = ((percent ?? 0) * 100).toFixed(1);
 
   return (
     <g>
@@ -120,13 +154,7 @@ const renderActiveShape = ({
       />
 
       {/* Connector dot */}
-      <circle
-        cx={ex}
-        cy={ey}
-        r={2}
-        fill={fill}
-        stroke="none"
-      />
+      <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
 
       {/* =========================================
           Document name
@@ -186,9 +214,7 @@ export default function CustomPieChart({
             name: item.document_type,
             value: Number(item.document_count),
 
-            fill:
-              documentColors[item.document_type] ||
-              "#777777",
+            fill: documentColors[item.document_type] || "#777777",
           };
         });
 
@@ -235,10 +261,7 @@ export default function CustomPieChart({
         activeShape={renderActiveShape}
       />
 
-      <Tooltip
-        content={() => null}
-        defaultIndex={defaultIndex}
-      />
+      <Tooltip content={() => null} defaultIndex={defaultIndex} />
     </PieChart>
   );
 }

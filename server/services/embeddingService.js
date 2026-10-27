@@ -1,4 +1,3 @@
-
 import jinaProvider from "./embeddings/jinaProvider.js";
 
 const providers = {
@@ -14,8 +13,8 @@ if (!provider) {
 }
 
 const embeddingService = {
-  generateEmbeddings: (texts) => {
-    return provider.generateEmbeddings(texts);
+  generateEmbeddings: (texts, task) => {
+    return provider.generateEmbeddings(texts, task);
   },
 
   getDimensions: () => {

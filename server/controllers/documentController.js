@@ -2,6 +2,149 @@ import pool from "../config/db.js";
 import supabase from "../config/supabase.js";
 import crypto from "crypto";
 import { createJob } from "../services/jobService.js";
+import retrievalService from "../services/retrievalService.js";
+import ragService from "../services/ragService.js";
+
+export const semanticSearchDocuments = async (req, res) => {
+  try {
+    const queryText = req.query.q?.trim();
+
+    if (!queryText) {
+      return res.status(400).json({
+        success: false,
+        message: "Search query is required.",
+      });
+    }
+
+    // 1. Get documents belonging to the authenticated user
+    const userDocuments = await pool.query(
+      `
+      SELECT id
+      FROM public.documents
+      WHERE user_id = $1
+      `,
+      [req.user.id]
+    );
+
+    const allowedDocumentIds = userDocuments.rows.map(
+      (document) => document.id
+    );
+
+    if (allowedDocumentIds.length === 0) {
+      return res.json({
+        success: true,
+        documents: [],
+      });
+    }
+
+    // 2. Retrieve matching chunks from Qdrant
+    const chunks = await retrievalService.searchChunks(
+      queryText,
+      50,
+      null,
+      allowedDocumentIds
+    );
+
+    // 3. Group chunks by document and retain the best score
+    const documentScores = new Map();
+
+    for (const chunk of chunks) {
+      const existing = documentScores.get(chunk.document_id);
+
+      if (!existing || chunk.score > existing.score) {
+        documentScores.set(chunk.document_id, {
+          score: chunk.score,
+          bestChunk: chunk.chunk_text,
+        });
+      }
+    }
+
+    // 4. Rank documents by their best matching chunk
+    const rankedDocuments = [...documentScores.entries()]
+      .sort((a, b) => b[1].score - a[1].score)
+      .slice(0, 10);
+
+    if (rankedDocuments.length === 0) {
+      return res.json({
+        success: true,
+        documents: [],
+      });
+    }
+
+    const documentIds = rankedDocuments.map(
+      ([documentId]) => documentId
+    );
+
+    // 5. Fetch document details from PostgreSQL
+    const result = await pool.query(
+      `
+      SELECT
+        d.id,
+        d.filename,
+        d.original_filename,
+        d.storage_path,
+        d.mime_type,
+        d.file_size,
+        dt.document_type,
+        LOWER(
+          COALESCE(pj.status::text, d.status)
+        ) AS status,
+        d.uploaded_at,
+        d.processed_at,
+        d.metadata
+
+      FROM public.documents d
+
+      LEFT JOIN public.document_text dt
+        ON dt.document_id = d.id
+
+      LEFT JOIN public.processing_jobs pj
+        ON pj.document_id = d.id
+
+      WHERE d.user_id = $1
+        AND d.id = ANY($2::uuid[])
+      `,
+      [req.user.id, documentIds]
+    );
+
+    // 6. Attach preview URLs and similarity scores
+    const documents = [];
+
+    for (const document of result.rows) {
+      const { data } = await supabase.storage
+        .from("documents")
+        .createSignedUrl(document.storage_path, 3600);
+
+      const match = documentScores.get(document.id);
+
+      documents.push({
+        ...document,
+        preview_url: data?.signedUrl || null,
+        search_score: match.score,
+        best_matching_chunk: match.bestChunk,
+      });
+    }
+
+    // Preserve Qdrant relevance order
+    documents.sort(
+      (a, b) => b.search_score - a.search_score
+    );
+
+    res.json({
+      success: true,
+      documents,
+    });
+
+  } catch (err) {
+    console.error("Semantic search failed:", err);
+
+    res.status(500).json({
+      success: false,
+      message: "Semantic search failed.",
+    });
+  }
+};
+
 
 export const getDocuments = async (req, res) => {
   try {
@@ -166,41 +309,16 @@ export const getDocumentCountWithType = async (req, res) => {
   try {
     const result = await pool.query(
       `
-      WITH document_types AS (
-        SELECT *
-        FROM (
-          VALUES
-            (1, 'bank_statement'),
-            (2, 'invoice'),
-            (3, 'payslip'),
-            (4, 'tax_document'),
-            (5, 'receipt')
-        ) AS t(sort_order, document_type)
-      )
-
       SELECT
-        dt.document_type,
-        COUNT(DISTINCT d.document_id)::int AS document_count
-
-      FROM document_types dt
-
-      LEFT JOIN (
-        SELECT DISTINCT
-          document_text.document_id,
-          document_text.document_type
-        FROM public.document_text
-        INNER JOIN public.documents
-          ON documents.id = document_text.document_id
-        WHERE documents.user_id = $1
-      ) d
-        ON d.document_type = dt.document_type
-
-      GROUP BY
-        dt.sort_order,
-        dt.document_type
-
-      ORDER BY
-        dt.sort_order;
+        document_text.document_type,
+        COUNT(DISTINCT document_text.document_id)::int AS document_count
+      FROM public.document_text
+      INNER JOIN public.documents
+        ON documents.id = document_text.document_id
+      WHERE documents.user_id = $1
+        AND document_text.document_type IS NOT NULL
+      GROUP BY document_text.document_type
+      ORDER BY document_count DESC, document_text.document_type;
       `,
       [req.user.id],
     );
@@ -211,6 +329,103 @@ export const getDocumentCountWithType = async (req, res) => {
 
     res.status(500).json({
       message: "Failed to fetch document count.",
+    });
+  }
+};
+
+
+export const askDocumentQuestion = async (req, res) => {
+  try {
+    const question = req.body.question?.trim();
+
+    if (!question) {
+      return res.status(400).json({
+        success: false,
+        message: "Question is required.",
+      });
+    }
+
+    // Get documents belonging to the authenticated user
+    const userDocuments = await pool.query(
+      `
+      SELECT id, original_filename
+      FROM public.documents
+      WHERE user_id = $1
+      `,
+      [req.user.id]
+    );
+
+    const allowedDocumentIds = userDocuments.rows.map(
+      (document) => document.id
+    );
+
+    if (allowedDocumentIds.length === 0) {
+      return res.json({
+        success: true,
+        answer: "You haven't uploaded any documents yet.",
+        sources: [],
+      });
+    }
+
+    // Retrieve relevant chunks from Qdrant
+    const chunks = await retrievalService.searchChunks(
+      question,
+      5,
+      null,
+      allowedDocumentIds
+    );
+
+    if (chunks.length === 0) {
+      return res.json({
+        success: true,
+        answer: "I couldn't find relevant information in your documents.",
+        sources: [],
+      });
+    }
+
+    // Map document IDs to filenames
+    const documentMap = new Map(
+      userDocuments.rows.map((document) => [
+        document.id,
+        document.original_filename,
+      ])
+    );
+
+    const enrichedChunks = chunks.map((chunk) => ({
+      ...chunk,
+      document_name:
+        documentMap.get(chunk.document_id) || "Unknown document",
+    }));
+
+    // Generate answer using the LLM
+    const answer = await ragService.generateAnswer(
+      question,
+      enrichedChunks
+    );
+
+    // Prepare source information
+    const sources = enrichedChunks.map((chunk, index) => ({
+      source_number: index + 1,
+      document_id: chunk.document_id,
+      document_name: chunk.document_name,
+      chunk_index: chunk.chunk_index,
+      page_start: chunk.page_start,
+      page_end: chunk.page_end,
+      score: chunk.score,
+    }));
+
+    res.json({
+      success: true,
+      answer,
+      sources,
+    });
+
+  } catch (error) {
+    console.error("RAG error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to generate answer.",
     });
   }
 };

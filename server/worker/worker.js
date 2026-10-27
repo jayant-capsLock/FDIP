@@ -10,6 +10,7 @@ import { extractText } from "../services/ocrService.js";
 import { saveDocumentText } from "../services/textService.js";
 import { chunkDocument } from "../services/chunkingService.js";
 import embeddingService from "../services/embeddingService.js";
+import qdrantService from "../services/qdrantService.js";
 
 const processNextJob = async () => {
   const job = await getNextPendingJob();
@@ -43,7 +44,7 @@ const processNextJob = async () => {
 
     console.log(`Generated ${embeddings.length} embeddings.`);
 
-    await saveDocumentText(
+    const { savedChunks } = await saveDocumentText(
       job.document_id,
       1,
       extractedText,
@@ -53,6 +54,8 @@ const processNextJob = async () => {
       chunks,
       embeddings,
     );
+
+    await qdrantService.upsertChunks(savedChunks, embeddings);
 
     await markCompleted(job.id);
 

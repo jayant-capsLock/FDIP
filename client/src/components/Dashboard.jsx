@@ -4,10 +4,12 @@ import {
   uploadDocument,
   getDocumentCount,
   getDocuments,
+  semanticSearchDocuments,
 } from "../api/documentApi";
 import CustomPieChart from "./CustomPieChart";
 import DocumentCard from "./DocumentCard";
 import ProcessingStatusChart from "./ProcessingStatusChart";
+import RagChat from "./RagChat";
 
 const Dashboard = ({ setLoggedIn, setShowLogin, setTransitioning }) => {
   const [panelOption, setPanelOption] = useState("dashboard");
@@ -17,6 +19,9 @@ const Dashboard = ({ setLoggedIn, setShowLogin, setTransitioning }) => {
   const [documents, setDocuments] = useState([]);
   const fileInputRef = useRef();
   const [selectedDocument, setSelectedDocument] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -95,6 +100,48 @@ const Dashboard = ({ setLoggedIn, setShowLogin, setTransitioning }) => {
     fetchDocumentCount();
   }, []);
 
+  useEffect(() => {
+    const query = searchText.trim();
+
+    if (!query) {
+      setSearchResults([]);
+      setSearchLoading(false);
+      setSearchError(false);
+      return;
+    }
+
+    let active = true;
+
+    const timer = setTimeout(async () => {
+      try {
+        setSearchLoading(true);
+        setSearchError(false);
+
+        const res = await semanticSearchDocuments(query);
+
+        if (active) {
+          setSearchResults(res.data.documents || []);
+        }
+      } catch (err) {
+        console.error("Semantic search failed:", err);
+
+        if (active) {
+          setSearchResults([]);
+          setSearchError(true);
+        }
+      } finally {
+        if (active) {
+          setSearchLoading(false);
+        }
+      }
+    }, 300);
+
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [searchText]);
+
   const renderValue = (value) => {
     if (value === null || value === undefined) return "-";
 
@@ -164,16 +211,17 @@ const Dashboard = ({ setLoggedIn, setShowLogin, setTransitioning }) => {
             DOCUMENTS
           </button>
           <button
-            className={`PanelButton ${panelOption === "analytics" ? "optionSelected" : ""}`}
+            className={`PanelButton ${panelOption === "rag-chat" ? "optionSelected" : ""}`}
             onClick={() => {
-              setPanelOption("analytics");
+              setPanelOption("rag-chat");
             }}
           >
-            ANALYTICS
+            RAG-CHAT WITH DOCUMENTS
           </button>
         </div>
       </div>
       <div className="RightPanel">
+        {panelOption === "rag-chat" && <RagChat />}
         {panelOption === "documents" && (
           <div className="documentsPanel">
             {documents.map((document) => (
@@ -269,12 +317,102 @@ const Dashboard = ({ setLoggedIn, setShowLogin, setTransitioning }) => {
                 <h1>DASHBOARD</h1> <h3>WELCOME</h3>{" "}
               </div>
               <div>
-                <input
-                  className="searchBar"
-                  type="text"
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                />
+                <div className="searchContainer">
+                  <input
+                    className="searchBar"
+                    type="text"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    placeholder="Semantic Search"
+                  />
+
+                  {searchText.trim() && (
+                    <div className="searchResults">
+                      {searchLoading && (
+                        <div className="searchResultMessage">
+                          SEARCHING DOCUMENTS...
+                        </div>
+                      )}
+
+                      {!searchLoading && searchError && (
+                        <div className="searchResultMessage">
+                          SOMETHING WENT WRONG. TRY AGAIN.
+                        </div>
+                      )}
+
+                      {!searchLoading &&
+                        !searchError &&
+                        searchResults.length === 0 && (
+                          <div className="searchResultMessage">
+                            NO MATCHING DOCUMENTS FOUND.
+                          </div>
+                        )}
+
+                      {!searchLoading &&
+                        !searchError &&
+                        searchResults.map((document) => (
+                          <div className="searchResultItem" key={document.id}>
+                            <div>
+                              {document.mime_type?.startsWith("image/") &&
+                              document.preview_url ? (
+                                <img
+                                  src={document.preview_url}
+                                  alt={document.original_filename}
+                                />
+                              ) : document.mime_type === "application/pdf" &&
+                                document.preview_url ? (
+                                <div
+                                  style={{
+                                    width: "55px",
+                                    height: "65px",
+                                    border: "2px solid black",
+                                    background: "#d9d9d9",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  PDF
+                                </div>
+                              ) : (
+                                <div
+                                  style={{
+                                    width: "55px",
+                                    height: "65px",
+                                    border: "2px solid black",
+                                    background: "#d9d9d9",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                  }}
+                                >
+                                  DOC
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="searchResultInfo">
+                              <h3>{document.original_filename}</h3>
+
+                              <p>TYPE: {document.document_type || "UNKNOWN"}</p>
+
+                              <p>STATUS: {document.status}</p>
+
+                              {document.best_matching_chunk && (
+                                <p>
+                                  {document.best_matching_chunk.slice(0, 100)}
+                                  {document.best_matching_chunk.length > 100
+                                    ? "..."
+                                    : ""}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                </div>
               </div>
               <button className="NotificationButton">
                 <img src={notificationsImg} alt="Notifications" />
@@ -316,8 +454,6 @@ const Dashboard = ({ setLoggedIn, setShowLogin, setTransitioning }) => {
                 <div className="insightTitle">PROCESSING STATUS</div>
                 <ProcessingStatusChart statusCounts={statusCounts} />
               </div>
-              <div className="smallInsight">AI EXTRACTIONS TODAY</div>
-              <div className="smallInsight">AVG OCR ACCURACY</div>
             </div>
             <div className="midRegion">
               <div

@@ -39,3 +39,17 @@ export const getDocumentCountWithType = () => {
 export const getDocuments = () => {
   return API.get("/");
 };
+
+export const semanticSearchDocuments = (query) => {
+  return API.get("/search", {
+    params: {
+      q: query,
+    },
+  });
+};
+
+export const askDocumentQuestion = (question) => {
+  return API.post("/ask", {
+    question: question,
+  });
+};

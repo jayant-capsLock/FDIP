@@ -11,6 +11,10 @@ export const saveDocumentText = async (
   chunks,
   embeddings
 ) => {
+  if (chunks.length !== embeddings.length) {
+    throw new Error("Chunks and embeddings count mismatch");
+  }
+
   // Save extracted OCR text
   const result = await pool.query(
     `
@@ -47,11 +51,13 @@ export const saveDocumentText = async (
     [documentId]
   );
 
-  // Save chunks with their embeddings
+  // Save chunks and collect their database IDs
+  const savedChunks = [];
+
   for (let i = 0; i < chunks.length; i++) {
     const chunk = chunks[i];
 
-    await pool.query(
+    const chunkResult = await pool.query(
       `
       INSERT INTO document_chunks
       (
@@ -63,7 +69,8 @@ export const saveDocumentText = async (
         char_count,
         embedding
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7);
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING id;
       `,
       [
         documentId,
@@ -75,7 +82,16 @@ export const saveDocumentText = async (
         JSON.stringify(embeddings[i])
       ]
     );
+
+    savedChunks.push({
+      id: chunkResult.rows[0].id,
+      document_id: documentId,
+      ...chunk
+    });
   }
 
-  return result.rows[0];
+  return {
+    documentText: result.rows[0],
+    savedChunks
+  };
 };
